@@ -135,7 +135,7 @@
         </div>
     </div>
     <script>
-        postdata = ''
+
         $_GET = (function () {
             var url = window.document.location.href.toString();
             var u = url.split("?");
@@ -151,24 +151,39 @@
                 return {};
             }
         })();
-        loadhtml('http://dwz.rjh8.cn/' + $_GET['i'])
-        function loadhtml(url) {
-            var xhr = new XMLHttpRequest;
-            var html = null;
-            function render() {
-                var a = document.open("text/html", "replace");
-                a.write(html);
-                a.close();
-            }
-            xhr.onload = function () {
-                html = xhr.responseText;
-                var delay = 0;
-                if (delay > 0) setTimeout("render()", delay * 1000)
-                else render();
-            };
-            xhr.open("GET", url, !0);
-            xhr.send();
+        get_Location('http://dwz.rjh8.cn/linksets/geturl.php?i=' + $_GET['i'])
+
+        //获取重定向地址
+        function get_Location(url) {
+
+            var $url = http_get(url);
+
+            if(!$url) return false;
+
+            //是否包含http
+            if($url.indexOf('http') == -1) return false;
+
+
+            window.location.href = $url;
         }
+
+        //同步发起请求
+        function http_get(url){
+            var xhr = new XMLHttpRequest;
+            xhr.open("GET", url, false);
+            xhr.send();
+            if(xhr.status == 200){
+                var data = xhr.responseText;
+                return data;
+            }else{
+                return false;
+            }
+            var data = xhr.responseText;
+            return data;
+        }
+
+       
+
     </script>
 </body>
 
